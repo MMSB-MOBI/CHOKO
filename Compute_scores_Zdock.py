@@ -1,7 +1,5 @@
 import sys
-from dockingPP import parse, zParse
-#from src.core_scores import Scores, countNative, eval_natives
-#from src.core_clustering import rankCluster as rC, sortCluster, birchCluster
+from DockingPP.core import parse, zParse
 
 if len(sys.argv) != 5:
 	print("usage : python Compute_score_Zdock.py <complexes list> <zdock results path> <input pdbs path> <results dir>")
@@ -23,12 +21,12 @@ for prot in lines:
 	nb_prot += 1
 	print(str(nb_prot) + "/" + str(nb_prot_total))
 	prot=prot.strip()
-	DD=zParse(my_Zdock_path+prot+".zd3.0.2.fg.fixed.out",maxPose=500)
-	DD.setReceptor(my_input_path+prot+"_r_u.pdb")
-	DD.setLigand(my_input_path+prot+"_l_u.pdb")
+	DD=zParse(my_Zdock_path + "/" + prot+".zd3.0.2.fg.fixed.out",maxPose=500)
+	DD.setReceptor(my_input_path + "/" + prot+"_r_u.pdb")
+	DD.setLigand(my_input_path + "/" + prot+"_l_u.pdb")
 	DD.ccmap(start=0,stop=500)
 	rec_residues=DD[1].belongsTo.pdbObjReceptor.getResID
-	DD.write_all_scores(filename=results_dir + "/all_scores"+prot) 
+	DD.write_all_scores(filename=results_dir + "/" + prot) 
 	# Ici on peut assigner des statistiques extérieures 
 	# qu'on aura récupérer par DD.getStats()
 	# DD.all_scores(resStats= conStats=)

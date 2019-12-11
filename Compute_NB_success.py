@@ -1,81 +1,59 @@
 import sys
-sys.path.append("/Users/jmartin/STAGE_JULIA/2019_07_18_DEMO/DockingPP")
-from dockingPP import parse, zParse
-from src.core_scores import Scores, countNative, eval_natives
-from src.core_clustering import rankCluster as rC, sortCluster, birchCluster
+from DockingPP.core import zParse
+import argparse
+from DockingPP.core_scores import countNative
 
+def args_gestion():
+	parser = argparse.ArgumentParser(description = "A programm to count the number of successes after rescoring")
+	parser.add_argument("-N", metavar = "<int>", help = "Number of zdock scores to keep (default : 6)", default = 6, type=int)
+	parser.add_argument("--score", metavar = "<str>", help = "Score type", default = "res_fr_sum")
+	parser.add_argument("--list_complex", metavar = "<file>", help = "List of complex to process", required = True)
+	parser.add_argument("--zdock_results", metavar = "<dir>", help = "Directory with zdock results", required = True)
+	parser.add_argument("--input_pdbs", metavar = "<dir>", help = "Directory with input pdbs", required = True)
+	parser.add_argument("--max_pose", metavar = "<int>", help = "Number of poses to keep (default: 500)", default = 500, type=int)
+	parser.add_argument("--all_scores", metavar = "<dir>", help = "Directory with all scores computed", required = True)
 
+	return parser.parse_args()
 
-N=6
-score_name='res_fr_sum'
+if __name__ == "__main__":
+	ARGS = args_gestion()
+	NB_SUCCESS = 0
+	with open(ARGS.list_complex) as f:
+		for prot in f: 
+			prot=prot.strip()
+			print(prot)
+			#print(prot)
+			# read the docking output file 
+			DD = zParse(ARGS.zdock_results + "/" + prot + ".zd3.0.2.fg.fixed.out", maxPose = ARGS.max_pose)
+			DD.setScores(filename=ARGS.all_scores + "/" + prot + ".tsv")
+			# read the RMSD file 
+			with open(ARGS.zdock_results + "/" + prot +".zd3.0.2.fg.fixed.out.rmsds") as f:
+				lines=f.readlines()
+			data=[L.split()[1] for L in lines[0:500]]
+			# add it into the DD object, pose by pose 
+			for i in range(ARGS.max_pose):
+				DD.pList[i].set_RMSD(float(data[i]))
 
+			# A tester : 
+			#DD.get_rmsd(filename=)
+			
+			# Evaluation
+			# get the N first according to the native scoring function
+			my_list1=[pose for pose in DD.rankedPoses()[:ARGS.N-1]]
+			#show there rmsd 
+			#my_indexes=[i-1 for i in my_list1]
+			#print(DD.scores.rankedRmsds(my_indexes))
 
-if len(sys.argv)==1:
-    print('%s: a programm to count the number of successes after rescoring '%sys.argv[0])
-    print('usage: %s -N NB_Zdock -score score_name '%sys.argv[0])
-    sys.exit(1)
+			# select the N=10 first according to score
+			my_list2=DD.rankedPoses(element=ARGS.score)[:10]
 
-i=1
-while i < len(sys.argv):
-    arg=sys.argv[i]
-    if arg == '-N':
-        i=i+1
-        N=int(sys.argv[i])
-    if arg == '-score':
-        i=i+1
-        score_name=sys.argv[i]  
-    i=i+1
+			my_added_poses=[p for p in my_list2 if p not in my_list1][0:(10-ARGS.N)]
+			my_list_final=my_list1 + my_added_poses
+			rmsds=DD.scores.rankedRmsds(my_list_final)
 
-NB_SUCCESS=0
+			NB=countNative(rmsds, cutoff=2.5)[10]
 
+			if NB>0:
+				NB_SUCCESS+=1
 
-my_Zdock_path="/Users/jmartin/CHOKO/DATA/ZDOCK_3.0.2/decoys_bm4_zd3.0.2_6deg_fixed/results/"
-my_input_path="/Users/jmartin/CHOKO/DATA/ZDOCK_3.0.2/decoys_bm4_zd3.0.2_6deg_fixed/input_pdbs/"
-
-with open("list.txt") as f:
-	lines=f.readlines()
-
-
-for prot in lines:
-	prot=prot.strip()
-	#print(prot)
-	# read the docking output file 
-	DD=zParse(my_Zdock_path+prot+".zd3.0.2.fg.fixed.out",maxPose=500)
-	DD.setScores(filename="all_scores"+prot+".tsv")
-	# read the RMSD file 
-	with open(my_Zdock_path+prot+".zd3.0.2.fg.fixed.out.rmsds") as f:
-		lines=f.readlines()
-	data=[L.split()[1] for L in lines[0:500]]
-	# add it into the DD object, pose by pose 
-	for i in range(500):
-		DD.pList[i].set_RMSD(float(data[i]))
-
-
-	# A tester : 
-	#DD.get_rmsd(filename=)
-	
-
-	# Evaluation
-	# get the N=5 first according to the native scoring function
-	my_list1=[i+1 for i in range(N)]
-	#show there rmsd 
-	#my_indexes=[i-1 for i in my_list1]
-	#print(DD.scores.rankedRmsds(my_indexes))
-	# select the N=10 first according to res_fr_sum
-	my_list2=DD.scores.rankedPoses(element=score_name)[:10]
-	#my_indexes=[i-1 for i in my_list2]
-	#print(DD.scores.rankedRmsds(my_indexes))
-	my_added_poses=[p for p in my_list2 if p not in my_list1][0:(10-N)]
-	my_list_final=my_list1+my_added_poses
-
-	my_indexes=[i-1 for i in my_list_final]
-	rmsds=DD.scores.rankedRmsds(my_indexes)
-
-	NB=countNative(rmsds, cutoff=2.5)[10]
-
-	if NB>0:
-		NB_SUCCESS+=1
-
-
-
-print(NB_SUCCESS)
+	print(NB_SUCCESS)

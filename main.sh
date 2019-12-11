@@ -1,9 +1,20 @@
-source activate DockingPP
+COMPLEX_LIST="/home/chilpert/Data/Docking/list_complex.txt"
+ZDOCK_DATA="/home/chilpert/Data/Docking/zdock_data/decoys_bm4_zd3.0.2_6deg_fixed"
+OUTDIR="/home/chilpert/Test/Docking"
+LAUNCH_DIR=$(pwd)
+
+ZDOCK_RESULTS=$ZDOCK_DATA/results
+PDBS=$ZDOCK_DATA/input_pdbs
 
 # do it once :
 # python Compute_scores_Zdock.py
 
+set -e
+
+mkdir -p $OUTDIR
+
 #Reformat
+cd $PDBS
 for file in `ls *.pdb.ms `
 do
 
@@ -11,8 +22,12 @@ do
 
 done
 
+cd $LAUNCH_DIR
 
+SCORES_DIR=$OUTDIR/all_scores
+mkdir -p $SCORES_DIR
 
+#python Compute_scores_Zdock.py $COMPLEX_LIST $ZDOCK_RESULTS $PDBS $SCORES_DIR
 
 # Sans Clustering 
 for score in res_fr_sum  con_fr_sum  res_mean_fr con_mean_fr
@@ -20,10 +35,12 @@ do
 	echo score is $score 	
 	for N in 0 1 2 3 4 5 6 7 8 9 10
 	do
-	res=`python Compute_NB_success.py -N $N -score $score`
+	res=`python Compute_NB_success.py -N $N --score $score --list_complex $COMPLEX_LIST --zdock_results $ZDOCK_RESULTS --input_pdbs $PDBS --all_score $SCORES_DIR`
 	echo N=$N $res
 	done 
-done > Table1.txt
+done > $OUTDIR/nb_success_without_clustering.txt
+
+exit
 
 
 # Avec Clustering  BSAS 
