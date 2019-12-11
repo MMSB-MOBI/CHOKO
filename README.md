@@ -8,6 +8,6 @@ Follow DockingPP installation steps
 
 Add DockingPP to your PYTHONPATH
 
-## Data
+## Data
 https://zlab.umassmed.edu/zdock/decoys.shtml  
 ZDOCK 3.0.2, 6 degree sampling, fixed receptor
