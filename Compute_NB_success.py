@@ -9,7 +9,6 @@ def args_gestion():
 	parser.add_argument("--score", metavar = "<str>", help = "Score type", default = "res_fr_sum")
 	parser.add_argument("--list_complex", metavar = "<file>", help = "List of complex to process", required = True)
 	parser.add_argument("--zdock_results", metavar = "<dir>", help = "Directory with zdock results", required = True)
-	parser.add_argument("--input_pdbs", metavar = "<dir>", help = "Directory with input pdbs", required = True)
 	parser.add_argument("--max_pose", metavar = "<int>", help = "Number of poses to keep (default: 500)", default = 500, type=int)
 	parser.add_argument("--all_scores", metavar = "<dir>", help = "Directory with all scores computed", required = True)
 
@@ -21,7 +20,6 @@ if __name__ == "__main__":
 	with open(ARGS.list_complex) as f:
 		for prot in f: 
 			prot=prot.strip()
-			print(prot)
 			#print(prot)
 			# read the docking output file 
 			DD = zParse(ARGS.zdock_results + "/" + prot + ".zd3.0.2.fg.fixed.out", maxPose = ARGS.max_pose)
