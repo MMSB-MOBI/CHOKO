@@ -30,18 +30,19 @@ mkdir -p $SCORES_DIR
 #python Compute_scores_Zdock.py $COMPLEX_LIST $ZDOCK_RESULTS $PDBS $SCORES_DIR
 
 # Sans Clustering 
+echo "== Number of success without clustering"
 for score in res_fr_sum  con_fr_sum  res_mean_fr con_mean_fr
 do
 	echo score is $score 	
 	for N in 0 1 2 3 4 5 6 7 8 9 10
 	do
-	res=`python Compute_NB_success.py -N $N --score $score --list_complex $COMPLEX_LIST --zdock_results $ZDOCK_RESULTS --input_pdbs $PDBS --all_score $SCORES_DIR`
+	res=`python Compute_NB_success.py -N $N --score $score --list_complex $COMPLEX_LIST --zdock_results $ZDOCK_RESULTS --all_scores $SCORES_DIR`
 	echo N=$N $res
 	done 
 done > $OUTDIR/nb_success_without_clustering.txt
 
-exit
 
+echo "== Number of success with BSAS clustering"
 
 # Avec Clustering  BSAS 
 for maxD in 3 
@@ -50,34 +51,34 @@ echo maxD=$maxD
 
 for N in 0 1 2 3 4 5 6 7 8 9 10
 do
-res=`python Combine_BSAS_clusters.py -N $N -score res_fr_sum -maxD $maxD`
+res=`python Combine_BSAS_clusters.py -N $N --score res_fr_sum --maxD $maxD --list_complex $COMPLEX_LIST --zdock_results $ZDOCK_RESULTS --all_scores $SCORES_DIR`
 echo N=$N $res
 done 
 
-done > Table2.txt
+done > $OUTDIR/nb_success_with_BSAS.txt
+
 
 # End of Table 
 
 
 #Avec Clustering : script : Combine_clusters_rescored.py : pour chaque cluster, on attribue un nouveau score (=rang moyen) et l’on ré-ordonne les clusters selon ce rang. (rankCluster)
-echo 'res_fr_sum'
-for N in 0 1 2 3 4 5 6 7 8 9 10
-do
-res=`python Combine_clusters_rescored.py -N $N -score res_fr_sum`
-echo $N $res
-done
+#echo 'res_fr_sum'
+#for N in 0 1 2 3 4 5 6 7 8 9 10
+#do
+#res=`python Combine_clusters_rescored.py -N $N -score res_fr_sum`
+#echo $N $res
+#done
+# IS THIS PART USEFUL ? Script doesn't exist and no redirection
 
 for score2 in original_score res_fr_sum
 do
 echo $score2
 for N in 0 1 2 3 4 5 6 7 8 9 10
 do
-res=`python Combine_clusters_rescored_choice.py -N $N -score res_fr_sum -score2 $score2`
+res=`python Combine_clusters_rescored_choice.py -N $N --score res_fr_sum --list_complex $COMPLEX_LIST --zdock_results $ZDOCK_RESULTS --all_scores $SCORES_DIR`
 echo N=$N $res
 done 
-done > Table3.txt
-
-
+done > $OUTDIR/nb_success_rescored_BSAS.txt
 
 
 echo 'res_fr_sum'
