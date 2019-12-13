@@ -1,81 +1,69 @@
 import sys
-sys.path.append("/Users/jmartin/STAGE_JULIA/2019_07_18_DEMO/DockingPP")
-from dockingPP import parse, zParse
-from src.core_scores import Scores, countNative, eval_natives
-from src.core_clustering import rankCluster as rC, sortCluster, birchCluster
+from DockingPP.core import zParse
+from DockingPP.core_clustering import BSAS
+from DockingPP.core_scores import countNative
+import argparse
+
+def args_gestion():
+	parser = argparse.ArgumentParser(description = "A programm to count the number of successes after rescoring")
+	parser.add_argument("-N", metavar = "<int>", help = "Number of zdock scores to keep (default : 6)", default = 6, type=int)
+	parser.add_argument("--score", metavar = "<str>", help = "Score type", default = "res_fr_sum")
+	parser.add_argument("--list_complex", metavar = "<file>", help = "List of complex to process", required = True)
+	parser.add_argument("--zdock_results", metavar = "<dir>", help = "Directory with zdock results", required = True)
+	parser.add_argument("--maxD", metavar = "<int>", help = "??", default=3, type=int)
+	parser.add_argument("--max_pose", metavar = "<int>", help = "Number of poses to keep (default: 500)", default = 500, type=int)
+	parser.add_argument("--all_scores", metavar = "<dir>", help = "Directory with all scores computed", required = True)
+
+	return parser.parse_args()
 
 
 
-N=6
-score_name='res_fr_sum'
+if __name__ == "__main__":
 
+	ARGS = args_gestion()
 
-if len(sys.argv)==1:
-    print('%s: a programm to count the number of successes after rescoring  and clustering '%sys.argv[0])
-    print('usage: %s -N NB_Zdock -score score_name -maxD maxD'%sys.argv[0])
-    sys.exit(1)
+	NB_SUCCESS=0
 
-i=1
-while i < len(sys.argv):
-    arg=sys.argv[i]
-    if arg == '-N':
-        i=i+1
-        N=int(sys.argv[i])
-    if arg == '-score':
-        i=i+1
-        score_name=sys.argv[i]
-    if arg == '-maxD':
-        i=i+1
-        maxD=float(sys.argv[i])
-    i=i+1
-
-NB_SUCCESS=0
-
-my_Zdock_path="/Users/jmartin/CHOKO/DATA/ZDOCK_3.0.2/decoys_bm4_zd3.0.2_6deg_fixed/results/"
-my_input_path="/Users/jmartin/CHOKO/DATA/ZDOCK_3.0.2/decoys_bm4_zd3.0.2_6deg_fixed/input_pdbs/"
-
-with open("list.txt") as f:
-	lines=f.readlines()
-
-for prot in lines:
-	prot=prot.strip()
-	
-	# read the docking output file 
-	DD=zParse(my_Zdock_path+prot+".zd3.0.2.fg.fixed.out",maxPose=500)
-	DD.setScores(filename="all_scores"+prot+".tsv")
-
-	# read the RMSD file 
-	with open(my_Zdock_path+prot+".zd3.0.2.fg.fixed.out.rmsds") as f:
+	with open(ARGS.list_complex) as f:
 		lines=f.readlines()
-	data=[L.split()[1] for L in lines[0:500]]
-	# add it into the DD object, pose by pose 
-	for i in range(500):
-		DD.pList[i].set_RMSD(float(data[i]))
-	
-	DD.scores.setPoses(DD.pList)
-	
-	# cluster the poses using native ranks :
-	native_ranked_poses=[i+1 for  i in range(500)]
-	native_ranked_indexes=[i-1 for i in native_ranked_poses]
 
-	new_ranked_poses=DD.scores.rankedPoses(element=score_name)
-	new_ranked_indexes=[i-1 for i in new_ranked_poses]
-	# Ici: il faut donner des indices de poses 
-	c_clusters1=rC(DD.pList,native_ranked_indexes,maxD, out='dict', stop=500)
-	NbClus=len(c_clusters1.keys())
-	my_list1=[c_clusters1[i+1][0].id for  i in range(NbClus)]
+	for prot in lines:
+		prot=prot.strip()
+		
+		# read the docking output file 
+		DD=zParse(ARGS.zdock_results + "/" + prot + ".zd3.0.2.fg.fixed.out", maxPose = ARGS.max_pose)
+		DD.setScores(filename = ARGS.all_scores + "/" + prot + ".tsv")
 
-	c_clusters2=rC(DD.pList,new_ranked_indexes,maxD, out='dict', stop=500)
-	NbClus=len(c_clusters2.keys())
-	my_list2=[c_clusters2[i+1][0].id for  i in range(NbClus)]
+		# read the RMSD file 
+		with open(ARGS.zdock_results + "/" + prot + ".zd3.0.2.fg.fixed.out.rmsds") as f:
+			lines=f.readlines()
 
-	# First Zdock clusters, then other clusters 
-	my_added_poses=[p for p in my_list2 if p not in my_list1[:N]][0:(10-N)]
-	my_list_final=my_list1[:N]+my_added_poses
-	my_indexes=[i-1 for i in my_list_final]
-	rmsds=DD.scores.rankedRmsds(my_indexes)
-	NB=countNative(rmsds, cutoff=2.5)[10]
-	if NB>0:
-		NB_SUCCESS+=1
+		data=[L.split()[1] for L in lines[0:ARGS.max_pose]]
+		# add it into the DD object, pose by pose 
+		for i in range(ARGS.max_pose):
+			DD.pList[i].set_RMSD(float(data[i]))
+		
+		DD.scores.setPoses(DD.pList)
+		
+		native_ranked_poses=[pose for pose in DD.rankedPoses()]
+		
+		new_ranked_poses=DD.rankedPoses(element=ARGS.score)
 
-print(NB_SUCCESS)
+		c_clusters1=BSAS(native_ranked_poses, ARGS.maxD, out='dict', stop=ARGS.max_pose)
+		NbClus=len(c_clusters1)
+		# Get first pose (representative) for each cluster ? 
+		my_list1=[c_clusters1[i+1][0] for i in range(NbClus)]
+
+		c_clusters2=BSAS(new_ranked_poses, ARGS.maxD, out='dict', stop=ARGS.max_pose)
+		NbClus = len(c_clusters2)
+		my_list2=[c_clusters2[i+1][0] for  i in range(NbClus)]
+
+		# First Zdock clusters, then other clusters 
+		my_added_poses = [p for p in my_list2 if p not in my_list1[:ARGS.N]][0:(10-ARGS.N)]
+		my_list_final=my_list1[:ARGS.N] + my_added_poses
+		rmsds=DD.scores.rankedRmsds(my_list_final)
+		NB=countNative(rmsds, cutoff=2.5)[10]
+		if NB>0:
+			NB_SUCCESS+=1
+
+	print(NB_SUCCESS)
