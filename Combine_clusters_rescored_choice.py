@@ -8,7 +8,8 @@ import argparse
 def args_gestion():
 	parser = argparse.ArgumentParser(description = "A programm to count the number of successes after rescoring")
 	parser.add_argument("-N", metavar = "<int>", help = "Number of zdock scores to keep (default : 6)", default = 6, type=int)
-	parser.add_argument("--score", metavar = "<str>", help = "Score type", default = "res_fr_sum")
+	parser.add_argument("--pose_score", metavar = "<str>", help = "Type of score for rescoring poses", default = "res_fr_sum")
+	parser.add_argument("--cluster_score", metavar = "<str>", help = "Type of score for rescoring clusters", default = "original_rank")
 	parser.add_argument("--list_complex", metavar = "<file>", help = "List of complex to process", required = True)
 	parser.add_argument("--zdock_results", metavar = "<dir>", help = "Directory with zdock results", required = True)
 	parser.add_argument("--maxD", metavar = "<int>", help = "??", default=5, type=int)
@@ -48,17 +49,16 @@ if __name__ == "__main__":
 		# cluster the poses using native ranks :
 
 		native_ranked_poses = DD.rankedPoses()
-		native_ranks = DD.ranks("original_rank")
-		new_ranked_poses=DD.rankedPoses(element=ARGS.score)
-		new_ranks = DD.ranks(element = ARGS.score)	
+		new_ranked_poses=DD.rankedPoses(element = ARGS.pose_score)
+		sorting_ranks = DD.ranks(element = ARGS.cluster_score)	
 
 		# Ici: il faut donner des poses dans le nouvel ordre (ranked poses) ou bien les indices correspondants (ranked poses -1) ??? 
 		c_clusters1=BSAS(native_ranked_poses, ARGS.maxD, out='dict', stop=ARGS.max_pose)
-		sor_bclus1=sortCluster(c_clusters1, native_ranks)
+		sor_bclus1=sortCluster(c_clusters1, sorting_ranks)
 		my_list1=[c[0] for c in sor_bclus1][:ARGS.N]
 
 		c_clusters2=BSAS(new_ranked_poses, ARGS.maxD, out='dict', stop=ARGS.max_pose)
-		sor_bclus2=sortCluster(c_clusters2, new_ranks)
+		sor_bclus2=sortCluster(c_clusters2, sorting_ranks)
 		my_list2=[c[0] for c in sor_bclus2]
 
 		my_added_poses=[p for p in my_list2 if p not in my_list1][0:(10-ARGS.N)]

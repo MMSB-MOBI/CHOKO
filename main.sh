@@ -70,26 +70,30 @@ done > $OUTDIR/nb_success_with_BSAS.txt
 #done
 # IS THIS PART USEFUL ? Script doesn't exist and no redirection
 
-for score2 in original_score res_fr_sum
+
+echo "== Number of success with BSAS rescored clustering"
+
+for score2 in original_rank res_fr_sum
 do
 echo $score2
 for N in 0 1 2 3 4 5 6 7 8 9 10
 do
-res=`python Combine_clusters_rescored_choice.py -N $N --score res_fr_sum --list_complex $COMPLEX_LIST --zdock_results $ZDOCK_RESULTS --all_scores $SCORES_DIR`
+res=`python Combine_clusters_rescored_choice.py -N $N --pose_score res_fr_sum --cluster_score $score2 --list_complex $COMPLEX_LIST --zdock_results $ZDOCK_RESULTS --all_scores $SCORES_DIR`
 echo N=$N $res
 done 
 done > $OUTDIR/nb_success_rescored_BSAS.txt
 
+echo "== Number of success with BSAS rescored clustering and filter size"
 
 echo 'res_fr_sum'
 for size in 0 2 5 10 20 30 
 do
 for N in 0 1 2 3 4 5 6 7 8 9 10
 do
-res=`python Combine_clusters_filter_size.py -N $N -score res_fr_sum -size $size`
+res=`python Combine_clusters_filter_size.py -N $N --pose_score res_fr_sum --size $size --list_complex $COMPLEX_LIST --zdock_results $ZDOCK_RESULTS --all_scores $SCORES_DIR`
 echo size=$size N=$N $res
 done
-done  > Table4.txt
+done  > $OUTDIR/nb_success_rescored_BSAS_filter_size.txt
 
 
 
