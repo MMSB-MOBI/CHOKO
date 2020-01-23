@@ -1,8 +1,5 @@
 import sys
 
-sys.path.append("/Users/jmartin/CHOKO/2020_01_17_DEV_LIB/DockingPP/")
-sys.path.append("/Users/jmartin/CHOKO/2020_01_17_DEV_LIB/pyproteinsExt/src/")
-
 from DockingPP.core import zParse
 import argparse
 from DockingPP.core_scores import countNative
