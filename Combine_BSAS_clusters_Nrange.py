@@ -73,5 +73,5 @@ if __name__ == "__main__":
 					if NB>0:
 						NB_SUCCESS[N]+=1
 
-		for N in range(ARGS.top_N):
+		for N in range(ARGS.top_N+1):
 			print(str(N)+' '+str(NB_SUCCESS[N]))
