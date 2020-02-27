@@ -13,4 +13,4 @@ https://zlab.umassmed.edu/zdock/decoys.shtml
 ZDOCK 3.0.2, 6 degree sampling, fixed receptor
 
 ## Reproduce results from the article 
-See Consensus_Rescoring_Proteins_2020.sh
+See Reproduce_published_results2020.py 
