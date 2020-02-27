@@ -1,62 +1,40 @@
 import sys
 import pickle
 from DockingPP.core import parse, zParse
+import argparse
 
-if len(sys.argv) ==0 :
-	print("usage : python Compute_score__from_file.py -l <complexes list> -p <zdock results path> -i <input pdbs path> -o <output dir> -stat_dir directory where the picked data is stored -n_eval N_eval [default 500]")
-	exit()
+def args_gestion():
+	parser = argparse.ArgumentParser(description = "A programm to compute residue and contact frquencies in a set of docking poses" )
+	parser.add_argument("--list", metavar = "<file>", help = "List of complex to process", required = True)
+	parser.add_argument("--zdock_results", metavar = "<dir>", help = "Directory with zdock results", required = True)
+	parser.add_argument("--input_pdb", metavar = "<dir>", help = "Directory with the starting PDB files", required = True)
+	parser.add_argument("--N", metavar = "<int>", help = "Number of poses to treat (default 2000)", default = 2000, type=int)
+	parser.add_argument("--freq_dir", metavar = "<dir>", help = "Directory where the frequencies are stored", required = True)
 
+	return parser.parse_args()
 
-N_stat=500
-N_eval=500
-
-i=1
-while i < len(sys.argv):
-    arg=sys.argv[i]
-    if arg == '-l':
-        i=i+1
-        my_proteins=sys.argv[i]
-    if arg == '-p':
-        i=i+1
-        my_Zdock_path=sys.argv[i]
-    if arg == '-i':
-        i=i+1
-        my_input_path=sys.argv[i]
-    if arg == '-o':
-        i=i+1
-        results_dir=sys.argv[i].rstrip("/")
-    if arg == '-stat_dir':
-        i=i+1
-        stat_dir=sys.argv[i]
-    if arg == '-n_eval':
-        i=i+1
-        N_eval=int(sys.argv[i])       
-    i=i+1
+if __name__ == "__main__":
+	ARGS = args_gestion()
 
 
-print("will evaluate the first "+str(N_eval)+" in each decoy set, with statistics read from  "+stat_dir)
-
-with open(my_proteins) as f:
+with open(ARGS.list) as f:
 	lines=f.readlines()
 
-nb_prot = 0
-nb_prot_total = len(lines)
-for prot in lines:
-	nb_prot += 1
-	print(str(nb_prot) + "/" + str(nb_prot_total))
-	prot=prot.strip()
-	with open (stat_dir + "/" + prot+"_resstats.pkl", 'rb') as f2:
-		newResStats=pickle.load(f2)
-	with open (stat_dir + "/" + prot+"_constats.pkl", 'rb') as f2:
-		newConStats=pickle.load(f2)
-	DD2=zParse(my_Zdock_path+ "/" +prot+".zd3.0.2.fg.fixed.out",maxPose=N_eval)
-	DD2.setReceptor(my_input_path+prot+"_r_u.pdb")
-	DD2.setLigand(my_input_path+prot+"_l_u.pdb")
-	DD2.ccmap(start=0,stop=N_eval)
-	rec_residues=DD2[1].belongsTo.pdbObjReceptor.getResID
+	with open(ARGS.list) as f:
+		lines=f.readlines()
 
-	DD2.all_scores(resStats=newResStats,conStats=newConStats)
-	DD2.write_all_scores(filename=results_dir + "/" + prot,resStats=newResStats,conStats=newConStats,maxPose=N_eval) 
+	for prot in lines:
+		prot=prot.strip()
+		with open (ARGS.freq_dir + "/" + prot+"_resstats.pkl", 'rb') as f2:
+			newResStats=pickle.load(f2)
+		with open (ARGS.freq_dir + "/" + prot+"_constats.pkl", 'rb') as f2:
+			newConStats=pickle.load(f2)
+		DD2=zParse(ARGS.zdock_results+ "/" +prot+".zd3.0.2.fg.fixed.out",maxPose=ARGS.N)
+		DD2.setReceptor(ARGS.input_pdb+prot+"_r_u.pdb")
+		DD2.setLigand(ARGS.input_pdb+prot+"_l_u.pdb")
+		DD2.ccmap(start=0,stop=ARGS.N)
+		DD2.all_scores(resStats=newResStats,conStats=newConStats)
+		DD2.write_all_scores(filename= prot,resStats=newResStats,conStats=newConStats,maxPose=ARGS.N) 
 
 
 
