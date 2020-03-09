@@ -5,9 +5,10 @@
 Add a link to the preprint paper.
 
 ## Content
-- [Description] (https://github.com/MMSB-MOBI/Consensus_rescoring#description)
-- System and hardware requirements
-- Software prerequisites
+- [Description](#description)
+- [System and hardware requirements](#system-and-hardware-requirements)
+- [Software prerequisites](#software-prerequisites)
+- [Installation](#Installation)
 - Installation
 - Method overview
 - Application
