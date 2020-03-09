@@ -5,12 +5,12 @@
 Add a link to the preprint paper.
 
 ## Content
-Description 
-System and hardware requirements
-Software prerequisites
-Installation
-Method overview
-Application
+- Description 
+- System and hardware requirements
+- Software prerequisites
+- Installation
+- Method overview
+- Application
 0/ ZDOCK data retrieval and pre-processing
 1/ Precomputation of residue/contact scores
 2/ Precomputation of consensus scores of docking poses
