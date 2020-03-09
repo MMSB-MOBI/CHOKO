@@ -9,17 +9,16 @@ Add a link to the preprint paper.
 - [System and hardware requirements](#system-and-hardware-requirements)
 - [Software prerequisites](#software-prerequisites)
 - [Installation](#Installation)
-- Installation
-- Method overview
-- Application
+- [Method overview](#Method-overview)
+- [Application](#Application)
   - ZDOCK data retrieval and pre-processing
   - Precomputation of residue/contact scores
   - Precomputation of consensus scores of docking poses
   - Evaluation of Different Consensus-Based Rescoring Functions
   - Combination with ZDOCK Native Scoring Function
   - Combination of Clusters
-- License
-- Reference
+- [License](#License)
+- [Reference](#Reference)
 
 ## Description
 TBD: explain what we do in the paper
