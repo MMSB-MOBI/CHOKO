@@ -1,4 +1,4 @@
-# Rescoring ensembles of protein-protein docking poses using consensus approaches
+# CReDock: Consensus Rescoring of Protein-Protein Docking Ensembles
 TBD: Add an image
 
 TBD: Add a link to the preprint paper
@@ -36,7 +36,7 @@ Add reference of paper upon publication acceptance
 
 ## System and hardware requirements
 
-Consensus rescoring has been tested on both Linux (TBD give specification of Cecile's machine) and Mac OS environments (macOS Mojave, processor 3.1 GHz Intel Core i7, 16GB memory). To reproduce the experiments in the paper, the data set will consume approximately 940 Megabytes.
+CReDock has been tested on both Linux (TBD give specification of Cecile's machine) and Mac OS environments (macOS Mojave, processor 3.1 GHz Intel Core i7, 16GB memory). To reproduce the experiments in the paper, the data set will consume approximately 940 Megabytes.
 
 All the computations are run on a data set of decoys of 90 protein-protein complexes. The precomputation of contact and residue frequencies takes about 2 minutes for N=50 docking poses, up to 40 minutes for N=2000 docking poses.
 The computation of docking pose scores takes about 40 minutes for N=2000 docking poses.
@@ -44,7 +44,7 @@ The evaluation steps take several minutes.
 Overall, there is no need for a distributed cluster to reproduce the data shown here.
 
 ## Software prerequisites
-Consensus Rescoring is written in python 3 and relies on other software/libraries written by us, which themselves have dependencies.
+CReDock is written in python 3 and relies on other software/libraries written by us, which themselves have dependencies.
 The following is required:
   - Python (3.7)
   - DockingPP (https://github.com/MMSB-MOBI/DockingPP): implements consensus rescoring functions
@@ -83,16 +83,16 @@ Add DockingPP to your PYTHONPATH
 export PYTHONPATH=$PYTHONPATH:DOCKINGPP_LOCAL_PATH
 
 ```
-### Clone Consensus Rescoring 
-Clone Consensus Rescoring to a local directory
+### Clone CReDock
+Clone CReDock to a local directory
 ```
 git clone https://github.com/MMSB-MOBI/Consensus_rescoring
 cd Consensus_rescoring
 ```
 
 ## Method overview
+We implemented four different scoring functions in CreDock. All of them are based on the same definition of interface for a docking solution: interface contacts are defined by a distance between heavy atoms lower than 5.
 
-Explain the four different rescoring functions 
 
 ## Application
 
