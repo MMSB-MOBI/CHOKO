@@ -11,14 +11,14 @@ Add a link to the preprint paper.
 - Installation
 - Method overview
 - Application
-0/ ZDOCK data retrieval and pre-processing
-1/ Precomputation of residue/contact scores
-2/ Precomputation of consensus scores of docking poses
-3/ Evaluation of Different Consensus-Based Rescoring Functions
-4/ Combination with ZDOCK Native Scoring Function
-5/ Combination of Clusters
-License
-Reference
+0 ZDOCK data retrieval and pre-processing
+1 Precomputation of residue/contact scores
+2 Precomputation of consensus scores of docking poses
+3 Evaluation of Different Consensus-Based Rescoring Functions
+4 Combination with ZDOCK Native Scoring Function
+5 Combination of Clusters
+- License
+- Reference
 
   
 ## Initialization
