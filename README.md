@@ -39,10 +39,10 @@ Overall, there is no need for a distributed cluster to reproduce the data shown 
 ## Software prerequisites
 Consensus Rescoring is written in python 3 and relies on other software/libraries written by us, which themselves have dependencies.
 The following is required:
-  *Python (3.7)
-  *DockingPP (https://github.com/MMSB-MOBI/DockingPP): implements consensus rescoring functions
-  *pyProteinsExt (https://github.com/MMSB-MOBI/pyproteinsExt): implements functions for protein structure manipulation
-  *ccmap (https://github.com/MMSB-MOBI/ccmap): code in C to compute contact maps based on the neighbour cell algorithm
+  - Python (3.7)
+  - DockingPP (https://github.com/MMSB-MOBI/DockingPP): implements consensus rescoring functions
+  - pyProteinsExt (https://github.com/MMSB-MOBI/pyproteinsExt): implements functions for protein structure manipulation
+  - ccmap (https://github.com/MMSB-MOBI/ccmap): code in C to compute contact maps based on the neighbour cell algorithm
 
 ## Installation 
 
@@ -63,15 +63,10 @@ python setup.py build
 python setup.py install
 ```
 
-### Install DockingPP and its dependencies
-Clone the repository and go inside
+### Install DockingPP and its dependencies (including pyProteinsExt)
 ``` 
 git clone https://github.com/MMSB-MOBI/DockingPP
 cd DockingPP
-```
-
-Install python dependencies (including pyProteinsExt)
-```
 pip install -r requirements.txt
 ```
 
@@ -80,6 +75,12 @@ Add DockingPP to your PYTHONPATH
 ```
 export PYTHONPATH=$PYTHONPATH:DOCKINGPP_LOCAL_PATH
 
+```
+### Clone Consensus Rescoring 
+Clone Consensus Rescoring to a local directory
+```
+git clone https://github.com/MMSB-MOBI/Consensus_rescoring
+cd Consensus_rescoring
 ```
 
 ## Method overview
