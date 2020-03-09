@@ -11,21 +11,36 @@ Add a link to the preprint paper.
 - Installation
 - Method overview
 - Application
-0 ZDOCK data retrieval and pre-processing
-1 Precomputation of residue/contact scores
-2 Precomputation of consensus scores of docking poses
-3 Evaluation of Different Consensus-Based Rescoring Functions
-4 Combination with ZDOCK Native Scoring Function
-5 Combination of Clusters
+0. ZDOCK data retrieval and pre-processing
+1. Precomputation of residue/contact scores
+2. Precomputation of consensus scores of docking poses
+3. Evaluation of Different Consensus-Based Rescoring Functions
+4. Combination with ZDOCK Native Scoring Function
+5. Combination of Clusters
 - License
 - Reference
 
-  
-## Initialization
+## Description
+TBD: explain what we do in the paper
+
+## System and hardware requirements
+TBD
+
+## Software prerequisites
+TBD
+
+## Installation 
+TBD 
 
 Follow DockingPP installation steps 
 
 Add DockingPP to your PYTHONPATH
+
+## Method overview
+
+## Application
+
+
 
 ## Data
 https://zlab.umassmed.edu/zdock/decoys.shtml  
