@@ -1,7 +1,26 @@
-# Consensus_rescoring
+# Rescoring ensembles of protein-protein docking poses using consensus approaches
 
-This repository contains the scripts needed to rescore docking poses.
 
+
+Add a link to the preprint paper.
+
+## Content
+Description 
+System and hardware requirements
+Software prerequisites
+Installation
+Method overview
+Application
+0/ ZDOCK data retrieval and pre-processing
+1/ Precomputation of residue/contact scores
+2/ Precomputation of consensus scores of docking poses
+3/ Evaluation of Different Consensus-Based Rescoring Functions
+4/ Combination with ZDOCK Native Scoring Function
+5/ Combination of Clusters
+License
+Reference
+
+  
 ## Initialization
 
 Follow DockingPP installation steps 
