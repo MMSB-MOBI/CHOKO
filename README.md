@@ -91,14 +91,30 @@ cd Consensus_rescoring
 ```
 
 ## Method overview
-We implemented four different scoring functions in CreDock. All of them are based on the same definition of interface for a docking solution: interface contacts are defined by a distance between heavy atoms lower than 5.
+We implemented four different scoring functions, based on the frequencies of interface contacts or interface residue seen in the set of docking solutions, defined by a distance between heavy atoms lower than 5 &Aring;.
 
+The principle is to scan a first time the set of solutions to compute contact or residue frequencies.
+When then use these frequencies a second time, and give a score for each docking solution, according to the contacts or residues observed at the interface.
+
+The four scoring functions are :
+ 1- Contact_Average score: the score of a docking pose is the sum of the contact relative frequencies, divided by the number of contacts at the interface. Please note that this is identical to the CONSRANK scoring scheme introduced in (Oliva R, Vangone A, Cavallo L. Ranking multiple docking solutions based on the conservation of inter-residue contacts. Proteins: Structure, Function, and Bioinformatics. 2013;81: 1571–1584. doi:10.1002/prot.24314).
+ 
+ 2- Contact_Sum score: the score of a docking pose is the sum of the contact relative frequencies. 
+ 3- Residue_Average: the score of a docking pose is the sum of the residue relative frequencies, divided by the number of residues at the interface.
+ 4- Residue_Sum: the score of a docking pose is the sum of the residue relative frequencies.
 
 ## Application
 
   ### ZDOCK data retrieval and pre-processing
-https://zlab.umassmed.edu/zdock/decoys.shtml  
-ZDOCK 3.0.2, 6 degree sampling, fixed receptor
+  Retrieve the ZDOCK benchmark set (ZDOCK 3.0.2, 6 degree sampling, fixed receptor format)
+  ```
+  curl -O  https://zlab.umassmed.edu/zdock/decoys_bm4_zd3.0.2_6deg_fixed.tar.gz 
+  ```
+  Reformat the PDB input files to have 55 character long lines
+  ```
+  
+  ```
+  
   
   
   ### Precomputation of residue/contact scores
