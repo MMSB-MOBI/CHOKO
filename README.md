@@ -3,6 +3,10 @@ TBD: Add an image !!!!!
 
 TBD: Add a link to the preprint paper
 
+TBD: find a name for the package !!
+CReDock ?
+DRAKAR ?
+CHOKO ?
 
 ## Content
 - [Description](#description)
