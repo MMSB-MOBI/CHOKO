@@ -81,49 +81,123 @@ Add DockingPP to your PYTHONPATH
 
 ```
 export PYTHONPATH=$PYTHONPATH:DOCKINGPP_LOCAL_PATH
-
 ```
 ### Clone CReDock
 Clone CReDock to a local directory
 ```
 git clone https://github.com/MMSB-MOBI/Consensus_rescoring
-cd Consensus_rescoring
+export SRC_DIR=$PWD/Consensus_rescoring
 ```
 
 ## Method overview
 We implemented four different scoring functions, based on the frequencies of interface contacts or interface residue seen in the set of docking solutions, defined by a distance between heavy atoms lower than 5 &Aring;.
 
-The principle is to scan a first time the set of solutions to compute contact or residue frequencies.
-When then use these frequencies a second time, and give a score for each docking solution, according to the contacts or residues observed at the interface.
+The principle is to screen the set of docking poses to compute the frequencies of interface contacts or interface residues.
+These frequencies are then used to attribute a score for each docking pose, according to the contacts or residues observed at the interface.
 
 The four scoring functions are :
- 1- Contact_Average score: the score of a docking pose is the sum of the contact relative frequencies, divided by the number of contacts at the interface. Please note that this is identical to the CONSRANK scoring scheme introduced in (Oliva R, Vangone A, Cavallo L. Ranking multiple docking solutions based on the conservation of inter-residue contacts. Proteins: Structure, Function, and Bioinformatics. 2013;81: 1571–1584. doi:10.1002/prot.24314).
+ 1. Contact_Average score: the score of a docking pose is the sum of the contact relative frequencies, divided by the number of contacts at the interface. Please note that this is identical to the CONSRANK scoring scheme introduced in (Oliva R, Vangone A, Cavallo L. Ranking multiple docking solutions based on the conservation of inter-residue contacts. Proteins: Structure, Function, and Bioinformatics. 2013;81: 1571–1584. doi:10.1002/prot.24314).
  
- 2- Contact_Sum score: the score of a docking pose is the sum of the contact relative frequencies. 
- 3- Residue_Average: the score of a docking pose is the sum of the residue relative frequencies, divided by the number of residues at the interface.
- 4- Residue_Sum: the score of a docking pose is the sum of the residue relative frequencies.
+ 2. Contact_Sum score: the score of a docking pose is the sum of the contact relative frequencies. 
+ 3. Residue_Average: the score of a docking pose is the sum of the residue relative frequencies, divided by the number of residues at the interface.
+ 4. Residue_Sum: the score of a docking pose is the sum of the residue relative frequencies.
 
 ## Application
 
   ### ZDOCK data retrieval and pre-processing
-  Retrieve the ZDOCK benchmark set (ZDOCK 3.0.2, 6 degree sampling, fixed receptor format)
+  Retrieve the ZDOCK benchmark set (ZDOCK 3.0.2, 6 degree sampling, fixed receptor format):
   ```
   curl -O  https://zlab.umassmed.edu/zdock/decoys_bm4_zd3.0.2_6deg_fixed.tar.gz 
   ```
-  Reformat the PDB input files to have 55 character long lines
+  Reformat the input PDB files to have 55 character long lines
   ```
-  
+  ./Reformat_PDB_files.sh
+  export ZDOCK_DIR=$PWD/decoys_bm4_zd3.0.2_6deg_fixed/
   ```
-  
-  
-  
-  ### Precomputation of residue/contact scores
-  ### Precomputation of consensus scores of docking poses
-  ### Evaluation of Different Consensus-Based Rescoring Functions
-  ### Combination with ZDOCK Native Scoring Function
-  ### Combination of Clusters
-  
-  
+
+  ### Computation of residue/contact scores
+Compute the frequencies of interface contacts and interface residues, and store them in pickled ojects:
+```
+source Compute_frequencies.sh
+```
+This script will create four directories:
+1. Freq_top50: frequencies computed from the top 50 ZDOCK poses for each complex, requires about 2 minutes, size 4.0 MB,
+2. Freq_top100: frequencies computed from the top 100 ZDOCK poses for each complex, requires about 4 minutes, size 5.5 MB,
+3. Freq_top1000: frequencies computed from the top 1000 ZDOCK poses for each complex, requires about 18 minutes, size 14 MB,
+4. Freq_top2000: frequencies computed from the top 2000 ZDOCK poses for each complex, requires about 38 minutes, size 19MB.
+
+
+### Computation of consensus scores of docking poses
+Compute the consensus scores of the first 2000 ZDOCK poses using :
+```
+source Compute_scores.sh
+```
+This script will create four directories:
+1. Scores_Freq_top50: scores of the first 2000 ZDOCK poses, using frequencies in Freq_top50, requires about 36 minutes, size 27.0 MB,
+2. Scores_Freq_top100: scores of the first 2000 ZDOCK poses, using frequencies  in Freq_top100, requires about 36 minutes, size 27.0 MB,
+3. Scores_Freq_top1000: scores of the first 2000 ZDOCK poses, using frequencies  in Freq_top1000, requires about 36 minutes, size 27.0 MB,
+4. Scores_Freq_top2000: scores of the first 2000 ZDOCK poses, using frequencies  in Freq_top2000, requires about 36 minutes, size 27.0 MB.
+
+
+### Evaluation of Different Consensus-Based Rescoring Functions
+Compute the number of successes using each scoring function:
+```
+source Evaluate_scoring_functions.sh
+```
+Requires about 5 minutes.
+This script will create one file with the results presented in Figure 1 of the article:
+```
+NB_success_separate_scoring_functions.txt
+```
+
+### Combination of Consensus Scores with ZDOCK Native Scoring Function
+Compute the number of successes using the combination of consensus based scoring functions and the ZDOCK native scoring function:
+```
+source Evaluate_pose_combination.sh
+```
+Requires about 5 minutes.
+This script will create one file with the results presented in Figure 2 of the article:
+```
+NB_success_combination.txt
+```
+
+
+It is possible to have access to the number of near-native docking hits for each protein complex, using the --verbose True option of the python script:
+```
+python $SRC_DIR/Compute_NB_success.py --score residue_sum --list $SRC_DIR/listBM.txt  --zdock_results $ZDOCK_DIR/results/ --max_pose 2000 --all_scores Scores_Freq_top100/  --rmsd 2.5 --N_native 7 --verbose True 
+```
+
+
+To get access to the selected poses for one particular complex, run the python with the --verbose Ultra option:
+```
+echo "1E6E" > list.temp
+python $SRC_DIR/Compute_NB_success.py --score residue_sum --list list.temp  --zdock_results $ZDOCK_DIR/results/ --max_pose 2000 --all_scores Scores_Freq_top100/  --rmsd 2.5 --N_native 7 --verbose Ultra 
+```
+
+
+
+### Combination of Clusters
+  Compute the number of successes using the BSAS clustering, and a combination of consensus based scoring functions and the ZDOCK native scoring function:
+```
+source Evaluate_cluster_combination.sh
+```
+Requires 7 minutes.
+This script will create one file with the results presented in Figure 3 of the article:
+```
+NB_success_cluster_combination.txt
+```
+
+To retrieve the selected pose shown in Figure 4, run  with the option --verbose Ultra
+```
+echo "1AVX
+1EAW
+1XQS
+1E6E" > list.txt
+
+python $SRC_DIR/Combine_BSAS_clusters_Nrange.py --N_native 5 --verbose Ultra --score contact_sum --maxD 8 --list list.txt  --zdock_results $ZDOCK_DIR/results/ --max_pose 2000 --all_scores Scores_Freq_top1000/  --rmsd 2.5 > poses_figure4.txt
+```
+
+
 ## License
 
 ??
@@ -132,7 +206,3 @@ The four scoring functions are :
 When accepted
 
 
-
-
-## Reproduce results from the article 
-See Reproduce_published_results2020.py 
