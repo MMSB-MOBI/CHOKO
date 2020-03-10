@@ -133,10 +133,12 @@ Compute the consensus scores of the first 2000 ZDOCK poses using :
 source Compute_scores.sh
 ```
 This script will create four directories:
-1. Scores_Freq_top50: scores of the first 2000 ZDOCK poses, using frequencies in Freq_top50, requires about 36 minutes, size 27.0 MB,
-2. Scores_Freq_top100: scores of the first 2000 ZDOCK poses, using frequencies  in Freq_top100, requires about 36 minutes, size 27.0 MB,
-3. Scores_Freq_top1000: scores of the first 2000 ZDOCK poses, using frequencies  in Freq_top1000, requires about 36 minutes, size 27.0 MB,
-4. Scores_Freq_top2000: scores of the first 2000 ZDOCK poses, using frequencies  in Freq_top2000, requires about 36 minutes, size 27.0 MB.
+1. Scores_Freq_top50: scores of the first 2000 ZDOCK poses, using frequencies in Freq_top50,
+2. Scores_Freq_top100: scores of the first 2000 ZDOCK poses, using frequencies  in Freq_top100,
+3. Scores_Freq_top1000: scores of the first 2000 ZDOCK poses, using frequencies  in Freq_top1000, 
+4. Scores_Freq_top2000: scores of the first 2000 ZDOCK poses, using frequencies  in Freq_top2000, 
+
+Each directory creation will require about 36 minutes, and consume 27.0MB of storage.
 
 
 ### Evaluation of Different Consensus-Based Rescoring Functions
@@ -145,6 +147,7 @@ Compute the number of successes using each scoring function:
 source Evaluate_scoring_functions.sh
 ```
 Requires about 5 minutes.
+
 This script will create one file with the results presented in Figure 1 of the article:
 ```
 NB_success_separate_scoring_functions.txt
@@ -156,13 +159,14 @@ Compute the number of successes using the combination of consensus based scoring
 source Evaluate_pose_combination.sh
 ```
 Requires about 5 minutes.
+
 This script will create one file with the results presented in Figure 2 of the article:
 ```
 NB_success_combination.txt
 ```
 
 
-It is possible to have access to the number of near-native docking hits for each protein complex, using the --verbose True option of the python script:
+To get the number of near-native docking hits for each protein complex,run the python script with the --verbose True option:
 ```
 python $SRC_DIR/Compute_NB_success.py --score residue_sum --list $SRC_DIR/listBM.txt  --zdock_results $ZDOCK_DIR/results/ --max_pose 2000 --all_scores Scores_Freq_top100/  --rmsd 2.5 --N_native 7 --verbose True 
 ```
@@ -182,12 +186,13 @@ python $SRC_DIR/Compute_NB_success.py --score residue_sum --list list.temp  --zd
 source Evaluate_cluster_combination.sh
 ```
 Requires 7 minutes.
+
 This script will create one file with the results presented in Figure 3 of the article:
 ```
 NB_success_cluster_combination.txt
 ```
 
-To retrieve the selected pose shown in Figure 4, run  with the option --verbose Ultra
+To retrieve the selected pose shown in Figure 4, run the python script with the --verbose Ultra option:
 ```
 echo "1AVX
 1EAW
