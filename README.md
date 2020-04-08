@@ -73,18 +73,23 @@ cd ccmap
 python setup.py build
 python setup.py install
 ```
+Or 
+```
+pip install ccmap
+```
 
 ### Install DockingPP and its dependencies (including pyProteinsExt)
 ``` 
 git clone https://github.com/MMSB-MOBI/DockingPP
 cd DockingPP
 pip install -r requirements.txt
+cd ..
 ```
 
 Add DockingPP to your PYTHONPATH
 
 ```
-export PYTHONPATH=$PYTHONPATH:DOCKINGPP_LOCAL_PATH
+export PYTHONPATH=$PYTHONPATH:$PWD/DockingPP/
 ```
 ### Clone CReDock
 Clone CReDock to a local directory
@@ -115,14 +120,14 @@ The four scoring functions are :
   ```
   Reformat the input PDB files to have 55 character long lines
   ```
-  ./Reformat_PDB_files.sh
+  $SRC_DIR/Reformat_PDB_files.sh
   export ZDOCK_DIR=$PWD/decoys_bm4_zd3.0.2_6deg_fixed/
   ```
 
   ### Computation of residue/contact scores
 Compute the frequencies of interface contacts and interface residues, and store them in pickled ojects:
 ```
-source Compute_frequencies.sh
+source $SRC_DIR/Compute_frequencies.sh
 ```
 This script will create four directories:
 1. Freq_top50: frequencies computed from the top 50 ZDOCK poses for each complex, requires about 2 minutes, size 4.0 MB,
@@ -134,7 +139,7 @@ This script will create four directories:
 ### Computation of consensus scores of docking poses
 Compute the consensus scores of the first 2000 ZDOCK poses using :
 ```
-source Compute_scores.sh
+source $SRC_DIR/Compute_scores.sh
 ```
 This script will create four directories:
 1. Scores_Freq_top50: scores of the first 2000 ZDOCK poses, using frequencies in Freq_top50,
@@ -148,7 +153,7 @@ Each directory creation will require about 36 minutes, and consume 27.0MB of sto
 ### Evaluation of Different Consensus-Based Rescoring Functions
 Compute the number of successes using each scoring function:
 ```
-source Evaluate_scoring_functions.sh
+source $SRC_DIR/Evaluate_scoring_functions.sh
 ```
 Requires about 5 minutes.
 
@@ -160,7 +165,7 @@ NB_success_separate_scoring_functions.txt
 ### Combination of Consensus Scores with ZDOCK Native Scoring Function
 Compute the number of successes using the combination of consensus based scoring functions and the ZDOCK native scoring function:
 ```
-source Evaluate_pose_combination.sh
+source $SRC_DIR/Evaluate_pose_combination.sh
 ```
 Requires about 5 minutes.
 
@@ -187,7 +192,7 @@ python $SRC_DIR/Compute_NB_success.py --score residue_sum --list list.temp  --zd
 ### Combination of Clusters
   Compute the number of successes using the BSAS clustering, and a combination of consensus based scoring functions and the ZDOCK native scoring function:
 ```
-source Evaluate_cluster_combination.sh
+source $SRC_DIR/Evaluate_cluster_combination.sh
 ```
 Requires 7 minutes.
 
