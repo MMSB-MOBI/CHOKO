@@ -11,12 +11,12 @@ TBD: Add a link to the preprint paper
 - [Installation](#Installation)
 - [Method overview](#Method-overview)
 - [Application](#Application)
-  - 0 ZDOCK data retrieval and pre-processing
-  - 1 Precomputation of residue/contact scores
-  - 2 Precomputation of consensus scores of docking poses
-  - 3 Evaluation of Different Consensus-Based Rescoring Functions
-  - 4 Combination with ZDOCK Native Scoring Function
-  - 5 Combination of Clusters
+  - 0. ZDOCK data retrieval and pre-processing
+  - 1. Precomputation of residue/contact scores
+  - 2. Precomputation of consensus scores of docking poses
+  - 3. Evaluation of Different Consensus-Based Rescoring Functions
+  - 4. Combination with ZDOCK Native Scoring Function
+  - 5. Combination of Clusters
 - [License](#License)
 - [Reference](#Reference)
 
@@ -109,7 +109,7 @@ The four scoring functions are :
 
 ## Application
 
-  ### 0 ZDOCK data retrieval and pre-processing
+  ### 0. ZDOCK data retrieval and pre-processing
   Retrieve the ZDOCK benchmark set (ZDOCK 3.0.2, 6 degree sampling, fixed receptor format):
   ```
   curl -O  https://zlab.umassmed.edu/zdock/decoys_bm4_zd3.0.2_6deg_fixed.tar.gz 
@@ -120,7 +120,7 @@ The four scoring functions are :
   export ZDOCK_DIR=$PWD/decoys_bm4_zd3.0.2_6deg_fixed/
   ```
 
-  ### 1 Computation of residue/contact scores
+  ### 1. Computation of residue/contact scores
 Compute the frequencies of interface contacts and interface residues, and store them in pickled ojects:
 ```
 source $SRC_DIR/Compute_frequencies.sh
@@ -132,7 +132,7 @@ This script will create four directories:
 4. Freq_top2000: frequencies computed from the top 2000 ZDOCK poses for each complex, requires about 38 minutes, size 19MB.
 
 
-### 2 Computation of consensus scores of docking poses
+### 2. Computation of consensus scores of docking poses
 Compute the consensus scores of the first 2000 ZDOCK poses using :
 ```
 source $SRC_DIR/Compute_scores.sh
@@ -146,7 +146,7 @@ This script will create four directories:
 Each directory creation will require about 36 minutes, and consume 27.0MB of storage.
 
 
-### 3 Evaluation of Different Consensus-Based Rescoring Functions
+### 3. Evaluation of Different Consensus-Based Rescoring Functions
 Compute the number of successes using each scoring function:
 ```
 source $SRC_DIR/Evaluate_scoring_functions.sh
@@ -158,7 +158,7 @@ This script will create one file with the results presented in Figure 1 of the a
 NB_success_separate_scoring_functions.txt
 ```
 
-### 4 Combination of Consensus Scores with ZDOCK Native Scoring Function
+### 4. Combination of Consensus Scores with ZDOCK Native Scoring Function
 Compute the number of successes using the combination of consensus based scoring functions and the ZDOCK native scoring function:
 ```
 source $SRC_DIR/Evaluate_pose_combination.sh
@@ -185,7 +185,7 @@ python $SRC_DIR/Compute_NB_success.py --score residue_sum --list list.temp  --zd
 
 
 
-### 5 Combination of Clusters
+### 5. Combination of Clusters
   Compute the number of successes using the BSAS clustering, and a combination of consensus based scoring functions and the ZDOCK native scoring function:
 ```
 source $SRC_DIR/Evaluate_cluster_combination.sh
