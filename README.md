@@ -1,12 +1,8 @@
-# CReDock: Consensus Rescoring of Protein-Protein Docking Ensembles
+# CHOKO: Consensus rescoring of High-throughput protein-protein DOcKing pOses
 TBD: Add an image !!!!!
 
 TBD: Add a link to the preprint paper
 
-TBD: find a name for the package !!
-CReDock ?
-DRAKAR ?
-CHOKO ?
 
 ## Content
 - [Description](#description)
@@ -15,12 +11,12 @@ CHOKO ?
 - [Installation](#Installation)
 - [Method overview](#Method-overview)
 - [Application](#Application)
-  - ZDOCK data retrieval and pre-processing
-  - Precomputation of residue/contact scores
-  - Precomputation of consensus scores of docking poses
-  - Evaluation of Different Consensus-Based Rescoring Functions
-  - Combination with ZDOCK Native Scoring Function
-  - Combination of Clusters
+  - 0 ZDOCK data retrieval and pre-processing
+  - 1 Precomputation of residue/contact scores
+  - 2 Precomputation of consensus scores of docking poses
+  - 3 Evaluation of Different Consensus-Based Rescoring Functions
+  - 4 Combination with ZDOCK Native Scoring Function
+  - 5 Combination of Clusters
 - [License](#License)
 - [Reference](#Reference)
 
@@ -91,11 +87,11 @@ Add DockingPP to your PYTHONPATH
 ```
 export PYTHONPATH=$PYTHONPATH:$PWD/DockingPP/
 ```
-### Clone CReDock
-Clone CReDock to a local directory
+### Clone CHOKO
+Clone CHOKO to a local directory
 ```
-git clone https://github.com/MMSB-MOBI/Consensus_rescoring
-export SRC_DIR=$PWD/Consensus_rescoring
+git clone https://github.com/MMSB-MOBI/CHOKO
+export SRC_DIR=$PWD/CHOKO
 ```
 
 ## Method overview
@@ -113,7 +109,7 @@ The four scoring functions are :
 
 ## Application
 
-  ### ZDOCK data retrieval and pre-processing
+  ### 0 ZDOCK data retrieval and pre-processing
   Retrieve the ZDOCK benchmark set (ZDOCK 3.0.2, 6 degree sampling, fixed receptor format):
   ```
   curl -O  https://zlab.umassmed.edu/zdock/decoys_bm4_zd3.0.2_6deg_fixed.tar.gz 
@@ -124,7 +120,7 @@ The four scoring functions are :
   export ZDOCK_DIR=$PWD/decoys_bm4_zd3.0.2_6deg_fixed/
   ```
 
-  ### Computation of residue/contact scores
+  ### 1 Computation of residue/contact scores
 Compute the frequencies of interface contacts and interface residues, and store them in pickled ojects:
 ```
 source $SRC_DIR/Compute_frequencies.sh
@@ -136,7 +132,7 @@ This script will create four directories:
 4. Freq_top2000: frequencies computed from the top 2000 ZDOCK poses for each complex, requires about 38 minutes, size 19MB.
 
 
-### Computation of consensus scores of docking poses
+### 2 Computation of consensus scores of docking poses
 Compute the consensus scores of the first 2000 ZDOCK poses using :
 ```
 source $SRC_DIR/Compute_scores.sh
@@ -150,7 +146,7 @@ This script will create four directories:
 Each directory creation will require about 36 minutes, and consume 27.0MB of storage.
 
 
-### Evaluation of Different Consensus-Based Rescoring Functions
+### 3 Evaluation of Different Consensus-Based Rescoring Functions
 Compute the number of successes using each scoring function:
 ```
 source $SRC_DIR/Evaluate_scoring_functions.sh
@@ -162,7 +158,7 @@ This script will create one file with the results presented in Figure 1 of the a
 NB_success_separate_scoring_functions.txt
 ```
 
-### Combination of Consensus Scores with ZDOCK Native Scoring Function
+### 4 Combination of Consensus Scores with ZDOCK Native Scoring Function
 Compute the number of successes using the combination of consensus based scoring functions and the ZDOCK native scoring function:
 ```
 source $SRC_DIR/Evaluate_pose_combination.sh
@@ -189,7 +185,7 @@ python $SRC_DIR/Compute_NB_success.py --score residue_sum --list list.temp  --zd
 
 
 
-### Combination of Clusters
+### 5 Combination of Clusters
   Compute the number of successes using the BSAS clustering, and a combination of consensus based scoring functions and the ZDOCK native scoring function:
 ```
 source $SRC_DIR/Evaluate_cluster_combination.sh
