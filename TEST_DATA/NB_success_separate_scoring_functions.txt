@@ -1,0 +1,17 @@
+frequency_set Score NB_success
+50 contact_average 21
+50 contact_sum 24
+50 residue_average 19
+50 residue_sum 27
+100 contact_average 21
+100 contact_sum 25
+100 residue_average 16
+100 residue_sum 23
+1000 contact_average 17
+1000 contact_sum 24
+1000 residue_average 5
+1000 residue_sum 18
+2000 contact_average 13
+2000 contact_sum 23
+2000 residue_average 2
+2000 residue_sum 18
