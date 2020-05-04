@@ -1,5 +1,5 @@
 import sys
-from DockingPP.core import parse, zParse
+import DockingPP
 
 import pickle
 import argparse
@@ -24,16 +24,18 @@ if __name__ == "__main__":
 		nb_prot += 1
 		print(str(nb_prot) + "/" + str(nb_prot_total))
 		prot=prot.strip()
-		DD=zParse(ARGS.zdock_results + "/" + prot+".zd3.0.2.fg.fixed.out",maxPose=ARGS.N)
+		# load first ARGS.N poses 
+		DD=DockingPP.loadZdock(ARGS.zdock_results + "/" + prot+".zd3.0.2.fg.fixed.out",ARGS.N)
 		DD.setReceptor(ARGS.input_pdb + "/" + prot+"_r_u.pdb")
 		DD.setLigand(ARGS.input_pdb + "/" + prot+"_l_u.pdb")
 
-		DD.ccmap(start=0,stop=ARGS.N)
-		[ResStats,ConStats]=DD.getStats
+		# use 8 threads, and compute contacts for ARGS.N first poses
+		DD.computeContactMap(8,ARGS.N)
+		DD.computeFrequencies(ARGS.N)
 		with open(prot+"_resstats.pkl", 'wb') as f2:
-			pickle.dump(ResStats, f2)
+			pickle.dump(DD.freq.rel_frequencies_residue, f2)
 		with open(prot+"_constats.pkl", 'wb') as f2:
-			pickle.dump(ConStats, f2)
+			pickle.dump(DD.freq.rel_frequencies_contact, f2)
 
 
 
