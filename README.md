@@ -185,7 +185,7 @@ echo "1AVX
 1XQS
 1E6E" > list.txt
 
-python $SRC_DIR/Combine_BSAS_clusters_Nrange.py --N_native 5 --verbose Ultra --score contact_sum --maxD 8 --list list.txt  --zdock_results $ZDOCK_DIR/results/ --max_pose 2000 --all_scores Scores_Freq_top1000/  --rmsd 2.5 > poses_figure4.txt
+python $SRC_DIR/Combine_BSAS_clusters_Nrange.py --N_native 5 --verbose Ultra --score contacts_sum --maxD 8 --list list.txt  --zdock_results $ZDOCK_DIR/results/ --max_pose 2000 --score_dir SCORES/Freq_top1000/  --rmsd 2.5 > poses_figure4.txt
 ```
 
 
