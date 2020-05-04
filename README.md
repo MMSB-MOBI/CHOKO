@@ -67,7 +67,7 @@ Or
 pip install ccmap
 ```
 
-### Install DockingPP and its dependencies (including pyProteinsExt)
+### Install DockingPP and its dependencies
 ``` 
 git clone https://github.com/MMSB-MOBI/DockingPP
 cd DockingPP
@@ -119,10 +119,10 @@ Compute the frequencies of interface contacts and interface residues, and store 
 source $SRC_DIR/Compute_frequencies.sh
 ```
 This script will create four directories:
-1. Freq_top50: frequencies computed from the top 50 ZDOCK poses for each complex, requires about 2 minutes, size 4.0 MB,
-2. Freq_top100: frequencies computed from the top 100 ZDOCK poses for each complex, requires about 4 minutes, size 5.5 MB,
-3. Freq_top1000: frequencies computed from the top 1000 ZDOCK poses for each complex, requires about 18 minutes, size 14 MB,
-4. Freq_top2000: frequencies computed from the top 2000 ZDOCK poses for each complex, requires about 38 minutes, size 19MB.
+1. Freq_top50: frequencies computed from the top 50 ZDOCK poses for each complex, requires about 13 seconds, size 1.9 MB,
+2. Freq_top100: frequencies computed from the top 100 ZDOCK poses for each complex, requires about 18 seconds, size 2.6 MB,
+3. Freq_top1000: frequencies computed from the top 1000 ZDOCK poses for each complex, requires about 54 seconds, size 7.4 MB,
+4. Freq_top2000: frequencies computed from the top 2000 ZDOCK poses for each complex, requires about 1 minute 46 seconds, size 10 MB.
 
 
 ### 2. Computation of consensus scores of docking poses
@@ -201,9 +201,6 @@ python $SRC_DIR/Combine_BSAS_clusters_Nrange.py --N_native 5 --verbose Ultra --s
 ```
 
 
-## License
-
-??
 
 ## Reference
 When accepted
