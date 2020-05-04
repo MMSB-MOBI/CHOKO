@@ -79,7 +79,7 @@ cd ..
 Add DockingPP to your PYTHONPATH
 
 ```
-export PYTHONPATH=$PYTHONPATH:$PWD/DockingPP/
+export PYTHONPATH=$PYTHONPATH:$PWD/DockingPP/src/
 ```
 ### Clone CHOKO
 Clone CHOKO to a local directory
