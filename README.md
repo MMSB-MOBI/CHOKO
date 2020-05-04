@@ -40,7 +40,7 @@ Overall, there is no need for a distributed cluster to reproduce the data shown 
 ## Software prerequisites
 CHOKO is written in python 3 and relies on other software/libraries written by us, which themselves have dependencies.
 The following is required:
-  - Python (3.7)
+  - Python (3.8)
   - DockingPP (https://github.com/MMSB-MOBI/DockingPP): implements consensus rescoring functions
   - pyProteinsExt (https://github.com/MMSB-MOBI/pyproteinsExt): implements functions for protein structure manipulation
   - ccmap (https://github.com/MMSB-MOBI/ccmap): code in C to compute contact maps based on the neighbour cell algorithm
@@ -48,10 +48,9 @@ The following is required:
 ## Installation 
 
 ### Install Python 3
-Our code has been tested with python 3.7.4. Feel free to test other python3 versions and give us feedback. 
-A simple solution is to create a new conda environment with python 3.
+A simple solution is to create a new conda environment with python 3.8
 ```
-conda create -n consensus_rescoring python=3.7.4
+conda create -n consensus_rescoring python=3.8
 conda activate consensus_rescoring
 ```
 Each time you want to work with consensus_rescoring you will have to activate the environment. 
