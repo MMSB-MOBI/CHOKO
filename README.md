@@ -113,33 +113,23 @@ The four scoring functions are :
   export ZDOCK_DIR=$PWD/decoys_bm4_zd3.0.2_6deg_fixed/
   ```
 
-  ### 1. Computation of residue/contact scores
-Compute the frequencies of interface contacts and interface residues, and store them in pickled ojects:
-```
-source $SRC_DIR/Compute_frequencies.sh
-```
-This script will create four directories:
-1. Freq_top50: frequencies computed from the top 50 ZDOCK poses for each complex, requires about 13 seconds, size 1.9 MB,
-2. Freq_top100: frequencies computed from the top 100 ZDOCK poses for each complex, requires about 18 seconds, size 2.6 MB,
-3. Freq_top1000: frequencies computed from the top 1000 ZDOCK poses for each complex, requires about 54 seconds, size 7.4 MB,
-4. Freq_top2000: frequencies computed from the top 2000 ZDOCK poses for each complex, requires about 1 minute 46 seconds, size 10 MB.
+### 1. Rescoring of the first 2,000 poses
 
-
-### 2. Computation of consensus scores of docking poses
-Compute the consensus scores of the first 2000 ZDOCK poses using :
+Compute the frequencies of interface contacts and interface residues, and use them to rescore the first 2,000 poses:
 ```
 source $SRC_DIR/Compute_scores.sh
 ```
-This script will create four directories:
-1. Scores_Freq_top50: scores of the first 2000 ZDOCK poses, using frequencies in Freq_top50,
-2. Scores_Freq_top100: scores of the first 2000 ZDOCK poses, using frequencies  in Freq_top100,
-3. Scores_Freq_top1000: scores of the first 2000 ZDOCK poses, using frequencies  in Freq_top1000, 
-4. Scores_Freq_top2000: scores of the first 2000 ZDOCK poses, using frequencies  in Freq_top2000, 
 
-Each directory creation will require about 36 minutes, and consume 27.0MB of storage.
+This script will create a main directory SCORES, with four subdirectories:
+1. SCORES/Freq_top50: scores of the first 2000 ZDOCK poses, using frequencies computed from the top 50 poses, 
+2. SCORES/Freq_top100: scores of the first 2000 ZDOCK poses, using frequencies computed from the top 100 poses, 
+3. SCORES/Freq_top1000: scores of the first 2000 ZDOCK poses, using frequencies computed from the top 1000 poses, 
+4. SCORES/Freq_top2000: scores of the first 2000 ZDOCK poses, using frequencies computed from the top 2000 poses. 
+
+Each directory creation will require about 3 minutes, and consume 13.0MB of storage.
 
 
-### 3. Evaluation of Different Consensus-Based Rescoring Functions
+### 2. Evaluation of Different Consensus-Based Rescoring Functions
 Compute the number of successes using each scoring function:
 ```
 source $SRC_DIR/Evaluate_scoring_functions.sh
@@ -151,7 +141,7 @@ This script will create one file with the results presented in Figure 1 of the a
 NB_success_separate_scoring_functions.txt
 ```
 
-### 4. Combination of Consensus Scores with ZDOCK Native Scoring Function
+### 3. Combination of Consensus Scores with ZDOCK Native Scoring Function
 Compute the number of successes using the combination of consensus based scoring functions and the ZDOCK native scoring function:
 ```
 source $SRC_DIR/Evaluate_pose_combination.sh
@@ -178,7 +168,7 @@ python $SRC_DIR/Compute_NB_success.py --score residue_sum --list list.temp  --zd
 
 
 
-### 5. Combination of Clusters
+### 4. Combination of Clusters
   Compute the number of successes using the BSAS clustering, and a combination of consensus based scoring functions and the ZDOCK native scoring function:
 ```
 source $SRC_DIR/Evaluate_cluster_combination.sh
@@ -203,6 +193,13 @@ python $SRC_DIR/Combine_BSAS_clusters_Nrange.py --N_native 5 --verbose Ultra --s
 
 
 ## Reference
+Rescoring ensembles of protein-protein docking poses using consensus approaches
+Guillaume Launay, Masahito Ohue, Julia Prieto Santero, Yuri Matsuzaki, Cécile Hilpert, Nobuyuki Uchikoga, Takanori Hayashi, Juliette Martin
+doi: https://doi.org/10.1101/2020.04.24.059469 
+
+
+ https://biorxiv.org/cgi/content/short/2020.04.24.059469v1
+
 When accepted
 
 
