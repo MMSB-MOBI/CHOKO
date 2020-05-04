@@ -1,8 +1,6 @@
 import sys
-
-from DockingPP.core import zParse
 import argparse
-from DockingPP.core_scores import countNative
+import DockingPP
 
 def args_gestion():
     parser = argparse.ArgumentParser(description = "A programm to count the number of successes after rescoring")
@@ -11,14 +9,12 @@ def args_gestion():
     parser.add_argument("--list", metavar = "<file>", help = "List of complex to process", required = True)
     parser.add_argument("--zdock_results", metavar = "<dir>", help = "Directory with zdock results", required = True)
     parser.add_argument("--max_pose", metavar = "<int>", help = "Number of poses to keep (default: 2000)", default = 2000, type=int)
-    parser.add_argument("--all_scores", metavar = "<dir>", help = "Directory with all scores computed", required = True)
+    parser.add_argument("--score_dir", metavar = "<dir>", help = "Directory with all scores computed", required = True)
     parser.add_argument("--top_N", metavar = "<int>", help = "topN to consider (default 10)", default = 10, type=int)
     parser.add_argument("--rmsd", metavar = "<float>", help = "RMSD cutoff (default 2.5)", default = 2.5, type=float)
     parser.add_argument("--verbose", metavar = "<dir>", help = "verbose output (deault False)", default="False",required = False)
 
     return parser.parse_args()
-
-
 
 if __name__ == "__main__":
     ARGS = args_gestion()
@@ -42,22 +38,22 @@ if __name__ == "__main__":
         for prot in f: 
             prot=prot.strip()
             # read the docking output file 
-            DD = zParse(ARGS.zdock_results + "/" + prot + ".zd3.0.2.fg.fixed.out", maxPose = ARGS.max_pose)
-            DD.setScores(filename=ARGS.all_scores + "/" + prot + ".tsv")
+            DH=DockingPP.loadZdock(ARGS.zdock_results + "/" + prot+".zd3.0.2.fg.fixed.out",ARGS.max_pose)
+            DH.loadScores(ARGS.score_dir+"/"+prot+".tsv")
+
             # read the RMSD file 
             with open(ARGS.zdock_results + "/" + prot +".zd3.0.2.fg.fixed.out.rmsds") as f:
                 lines=f.readlines()
-                
-            data=[L.split()[1] for L in lines[0:ARGS.max_pose]]
-            # add it into the DD object, pose by pose 
-            for i in range(ARGS.max_pose):
-                DD.pList[i].set_RMSD(float(data[i]))
-
+            
+            rmsd={L.split()[0]:L.split()[1] for L in lines}
             # Evaluation
             # get the top_N first according to the native scoring function
-            my_list1=[pose for pose in DD.rankedPoses(element="original_rank",stop=ARGS.top_N)]
+            original_poses = DH.getRankedPoses("original", ARGS.max_pose)
+            my_list1=[pose.index for pose in original_poses[:ARGS.top_N]]
+
             # select the top_N first according to the specified score
-            my_list2=DD.rankedPoses(element=ARGS.score,stop=ARGS.max_pose)[:ARGS.top_N]
+            reranked_poses = DH.getRankedPoses(ARGS.score,ARGS.max_pose)
+            my_list2=[pose.index for pose in reranked_poses[:ARGS.top_N]]
 
             if ARGS.N_native>-1:
                 n_native=ARGS.N_native
@@ -69,8 +65,8 @@ if __name__ == "__main__":
                 my_added_poses=[p for p in my_list2 if p not in my_initial_list][0:(ARGS.top_N-n_native)]
                 my_list_final=my_initial_list + my_added_poses
 
-                rmsds=DD.scores.rankedRmsds(my_list_final)
-                NB=countNative(rmsds, cutoff=ARGS.rmsd)[ARGS.top_N]
+                topN_rmsd=[rmsd[str(i)] for i in my_list_final]
+                NB=sum([1 for rmsd in topN_rmsd if float(rmsd)<ARGS.rmsd])
                 Results[n_native][prot]=NB
                 Poses[n_native][prot]=my_list_final
 
@@ -87,8 +83,8 @@ if __name__ == "__main__":
                     my_added_poses=[p for p in my_list2 if p not in my_initial_list][0:(ARGS.top_N-n_native)]
                     my_list_final=my_initial_list + my_added_poses
 
-                    rmsds=DD.scores.rankedRmsds(my_list_final)
-                    NB=countNative(rmsds, cutoff=ARGS.rmsd)[ARGS.top_N]
+                    topN_rmsd=[rmsd[str(i)] for i in my_list_final]
+                    NB=sum([1 for rmsd in topN_rmsd if float(rmsd)<ARGS.rmsd])
                     Results[n_native][prot]=NB
                     Poses[n_native][prot]=my_list_final
                     if NB>0:
@@ -126,10 +122,4 @@ else:
     else:
         for n_native in range(ARGS.top_N+1):
             print(str(n_native)+' '+str(NB_SUCCESS[n_native]))
-
-
-
-
-
-
 
