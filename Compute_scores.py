@@ -39,6 +39,6 @@ if __name__ == "__main__":
 		DH.computeFrequencies(ARGS.N1)
 		# rescore ARGS.N2 poses
 		DH.rescorePoses(ARGS.N2, type_score = "all")
-		DH.serializeRescoring(prot+".tsv", ["residues_sum", "residues_average", "CONSRANK_U", "CONSRANK"])
+		DH.serializeRescoring(prot+".tsv", ["residue_sum", "residue_average", "CONSRANK_U", "CONSRANK"])
 
 
