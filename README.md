@@ -28,10 +28,9 @@ In addition, we do not provide here physics-based or evolutionnary-based evaluat
 CHOKO allows to test different scores, with different ensembles of solution for statistics and evaluation. It operates directly on ZDOCK output files, and allows to treat thousands of docking poses.
 It requires scripting (see below).
 
-If you wish to apply the CONSRANK scores on a set of PDB files, we advise you to use the CONSRANK webserver:
+If you wish to apply the CONSRANK score on a set of PDB files, you should use the CONSRANK webserver:
 https://www.molnac.unisa.it/BioTools/consrank/
 (Chermak E, Petta A, Serra L, Vangone A, Scarano V, Cavallo L, Oliva R. CONSRANK: a server for the analysis, comparison and ranking of docking models based on inter-residue contacts. Bioinformatics 2015;31(9):1481–1483.)
-
 
 
 ## System and hardware requirements
@@ -54,10 +53,10 @@ The following is required:
 ### Install Python 3
 A simple solution is to create a new conda environment with python 3.8
 ```
-conda create -n consensus_rescoring python=3.8
-conda activate consensus_rescoring
+conda create -n choko python=3.8
+conda activate choko
 ```
-Each time you want to work with consensus_rescoring you will have to activate the environment. 
+Each time you want to work with choko you will have to activate the environment. 
 
 ### Compile and install ccmap
 ```
@@ -98,9 +97,9 @@ The principle is to screen the set of docking poses to compute the frequencies o
 These frequencies are then used to attribute a score for each docking pose, according to the contacts or residues observed at the interface.
 
 The four scoring functions are :
- 1. CONSRANK: the score of a docking pose is the sum of the contact relative frequencies, divided by the number of contacts at the interface. This is equation (3) in  Oliva R, Vangone A, Cavallo L. Ranking multiple docking solutions based on the conservation of inter-residue contacts. Proteins: Structure, Function, and Bioinformatics. 2013;81: 1571–1584. doi:10.1002/prot.24314.
+ 1. CONSRANK: the score of a docking pose is the sum of the contact relative frequencies, divided by the number of contacts at the interface. This is equation (3) in  Oliva R, Vangone A, Cavallo L. Ranking multiple docking solutions based on the conservation of inter-residue contacts. Proteins: Structure, Function, and Bioinformatics. 2013;81: 1571-1584. doi:10.1002/prot.24314.
  
- 2. CONSRANK_U: the score of a docking pose is the sum of the contact relative frequencies. This is equation (2) in  Oliva R, Vangone A, Cavallo L. Ranking multiple docking solutions based on the conservation of inter-residue contacts. Proteins: Structure, Function, and Bioinformatics. 2013;81: 1571–1584. doi:10.1002/prot.24314.
+ 2. CONSRANK_U: the score of a docking pose is the sum of the contact relative frequencies. This is equation (2) in  Oliva R, Vangone A, Cavallo L. Ranking multiple docking solutions based on the conservation of inter-residue contacts. Proteins: Structure, Function, and Bioinformatics. 2013;81: 1571-1584. doi:10.1002/prot.24314.
  3. Residue_Average: the score of a docking pose is the sum of the residue relative frequencies, divided by the number of residues at the interface.
  4. Residue_Sum: the score of a docking pose is the sum of the residue relative frequencies.
 
@@ -144,6 +143,7 @@ This script will create one file with the results presented in Figure 1 of the a
 ```
 NB_success_separate_scoring_functions.txt
 ```
+See in the TEST_DATA directory.
 
 ### 3. Combination of Consensus Scores with ZDOCK Native Scoring Function
 Compute the number of successes using the combination of consensus based scoring functions and the ZDOCK native scoring function:
@@ -156,18 +156,18 @@ This script will create one file with the results presented in Figure 2 of the a
 ```
 NB_success_combination.txt
 ```
-
+See in the TEST_DATA directory
 
 To get the number of near-native docking hits for each protein complex,run the python script with the --verbose True option:
 ```
-python $SRC_DIR/Compute_NB_success.py --score residues_sum --list $SRC_DIR/listBM.txt  --zdock_results $ZDOCK_DIR/results/ --max_pose 2000 --score_dir SCORES/Freq_top2000/  --rmsd 2.5 --N_native 6 --verbose True > verbose_output_NB_success_residue_sum_Freq_top2000_N6.txt
+python $SRC_DIR/Compute_NB_success.py --score residue_sum --list $SRC_DIR/listBM.txt  --zdock_results $ZDOCK_DIR/results/ --max_pose 2000 --score_dir SCORES/Freq_top2000/  --rmsd 2.5 --N_native 6 --verbose True > verbose_output_NB_success_residue_sum_Freq_top2000_N6.txt
 ```
 
 
 To get access to the selected poses for one particular complex, run the python with the --verbose Ultra option:
 ```
 echo "1E6E" > list.temp
-python $SRC_DIR/Compute_NB_success.py --score residues_sum --list list.temp  --zdock_results $ZDOCK_DIR/results/ --max_pose 2000 --score_dir SCORES/Freq_top2000/  --rmsd 2.5 --N_native 6 --verbose Ultra > ultra_verbose_output_1E6E_residue_sum_Freq_top2000_N6.txt
+python $SRC_DIR/Compute_NB_success.py --score residue_sum --list list.temp  --zdock_results $ZDOCK_DIR/results/ --max_pose 2000 --score_dir SCORES/Freq_top2000/  --rmsd 2.5 --N_native 6 --verbose Ultra > ultra_verbose_output_1E6E_residue_sum_Freq_top2000_N6.txt
 ```
 
 
@@ -183,6 +183,7 @@ This script will create one file with the results presented in Figure 3 of the a
 ```
 NB_success_cluster_combination.txt
 ```
+See in the TEST_DATA directory.
 
 To retrieve the selected pose shown in Figure 4, run the python script with the --verbose Ultra option:
 ```
@@ -197,7 +198,7 @@ python $SRC_DIR/Combine_BSAS_clusters_Nrange.py --N_native 5 --verbose Ultra --s
 
 
 ## Reference
-Rescoring ensembles of protein-protein docking poses using consensus approaches
+Rescoring ensembles of protein-protein docking poses using consensus approaches,
 Guillaume Launay, Masahito Ohue, Julia Prieto Santero, Yuri Matsuzaki, Cécile Hilpert, Nobuyuki Uchikoga, Takanori Hayashi, Juliette Martin.
 
 doi: https://doi.org/10.1101/2020.04.24.059469 
