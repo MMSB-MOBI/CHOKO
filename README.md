@@ -35,7 +35,7 @@ If you wish to apply the CONSRANK score on a set of PDB files, you should use th
 https://www.molnac.unisa.it/BioTools/consrank/
 (Chermak E, Petta A, Serra L, Vangone A, Scarano V, Cavallo L, Oliva R. CONSRANK: a server for the analysis, comparison and ranking of docking models based on inter-residue contacts. Bioinformatics 2015;31(9):1481–1483.)
 
-For structural clustering of the docking poses, we implemented the Basic Sequential Algorithmic Scheme (BSAS) (Koutroumbas K, Theodoridis S. Pattern Recognition. Amsterdam: Academic Press; 2008) as in (Jiménez-García B, Roel-Touris J, Romero-Durana M, Vidal M, Jiménez-González D, Fernández-Recio J. LightDock: a new multi-scale approach to protein–protein dock).
+The structural clustering of the docking poses is done with the Basic Sequential Algorithmic Scheme (BSAS) (Koutroumbas K, Theodoridis S. Pattern Recognition. Amsterdam: Academic Press; 2008) as in (Jiménez-García B, Roel-Touris J, Romero-Durana M, Vidal M, Jiménez-González D, Fernández-Recio J. LightDock: a new multi-scale approach to protein–protein dock).
 
 ## System and hardware requirements
 
