@@ -1,7 +1,7 @@
 mkdir SCORES
 cd SCORES
 
-for N1 in 50 100 1000 2000 
+for N1 in 50 100 1000 2000 54000 
 do
     mkdir Freq_top$N1
     cd Freq_top$N1
