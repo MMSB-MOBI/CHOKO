@@ -35,10 +35,11 @@ If you wish to apply the CONSRANK score on a set of PDB files, you should use th
 https://www.molnac.unisa.it/BioTools/consrank/
 (Chermak E, Petta A, Serra L, Vangone A, Scarano V, Cavallo L, Oliva R. CONSRANK: a server for the analysis, comparison and ranking of docking models based on inter-residue contacts. Bioinformatics 2015;31(9):1481–1483.)
 
+For structural clustering of the docking poses, we implemented the Basic Sequential Algorithmic Scheme (BSAS) (Koutroumbas K, Theodoridis S. Pattern Recognition. Amsterdam: Academic Press; 2008) as in (Jiménez-García B, Roel-Touris J, Romero-Durana M, Vidal M, Jiménez-González D, Fernández-Recio J. LightDock: a new multi-scale approach to protein–protein dock).
 
 ## System and hardware requirements
 
-CHOKO has been tested on both Linux and Mac OS environments (macOS Mojave, processor 3.1 GHz Intel Core i7, 16GB memory). To reproduce the experiments in the paper, the data set will consume approximately 940 Megabytes.
+CHOKO has been tested on both Linux and Mac OS environments (macOS Mojave, processor 3.1 GHz Intel Core i7, 16GB memory). To reproduce the experiments in the paper, the data set will consume approximately 880 Megabytes.
 
 All the computations are run on a data set of decoys of 90 protein-protein complexes. The computation of contact and residue frequencies and rescoring of 2000 poses takes about 3 minutes for the 90 complexes.
 Overall, there is no need for a distributed cluster to reproduce the data shown here.
