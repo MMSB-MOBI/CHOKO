@@ -20,8 +20,8 @@ doi: https://doi.org/10.1101/2020.04.24.059469
 
 
 The consensus rescoring of protein-protein docking poses has been introduced by Oliva et al in 2013
-(Oliva R, Vangone A, Cavallo L. Ranking multiple docking solutions based on the conservation of inter-residue contacts. Proteins: Structure, Function, and Bioinformatics. 2013;81: 1571?~@~S1584. doi:10.1002/prot.24314). 
-
+(Oliva R, Vangone A, Cavallo L. Ranking multiple docking solutions based on the conservation of inter-residue contacts. Proteins: Structure, Function, and Bioinformatics. 2013;81: 1571-1584. doi:10.1002/prot.24314) and successfully applied then (Vangone A, Cavallo L, Oliva R. Using a consensus approach based on the conservation of inter-residue contacts to rank CAPRI models. Proteins: Structure, Function, and Bioinformatics 2013;81(12):2210-2220, Oliva R, Chermak E, Cavallo L. Analysis and Ranking of Protein-Protein Docking Models Using Inter-Residue Contacts and Inter-Molecular Contact Maps. Molecules 2015;20(7):12045-12060,  Chermak E, Donato RD, Lensink MF, Petta A, Serra L, Scarano V, Cavallo L, Oliva R. Introducing a Clustering Step in a Consensus Approach for the Scoring of Protein-Protein Docking Models. PLOS ONE 2016;11(11):e0166460).
+ 
 CHOKO computes statistics on interface contacts or interface residues in the set of docking solutions, and uses these statistics to build a score for each docking pose.
 Four scores are implemented: two scores proposed by Oliva et al in the CONSRANK method (Oliva R, Vangone A, Cavallo L. Ranking multiple docking solutions based on the conservation of inter-residue contacts. Proteins: Structure, Function, and Bioinformatics. 2013;81: 1571–1584. doi:10.1002/prot.24314), and two variations on it, based on interface residues.
 
