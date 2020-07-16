@@ -133,6 +133,7 @@ This script will create a main directory SCORES, with four subdirectories:
 3. SCORES/Freq_top1000: scores of the first 2000 ZDOCK poses, using frequencies computed from the top 1000 poses, 
 4. SCORES/Freq_top2000: scores of the first 2000 ZDOCK poses, using frequencies computed from the top 2000 poses. 
 5. SCORES/Freq_top54000: scores of the first 2000 ZDOCK poses, using frequencies computed from the top 54000 poses.
+
 Each directory creation will consume 13.0MB of storage and require about 3 minutes, except the last one, Freq_top54000, which requires about 40 minutes due to the large number of poses to treat.
 
 If you wish to rescore a different number of poses, you can do so by changing the option -N2 2000 to the desired number in Compute_scores.sh.
